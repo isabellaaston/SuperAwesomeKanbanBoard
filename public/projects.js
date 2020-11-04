@@ -1,9 +1,9 @@
 const view = (state) => `
-<div class="desktopView">
+<div class="desktopView hidden">
   <div class="nav">
     <a href="/">Back to projects</a>
     <form class="taskForm" action="/task/project/${state.project.id}/create" method="POST">
-      <input type="text" id="description" name="description" placeholder="Task Description" required> <br>
+      <input type="text" name="description" placeholder="Task Description" required> <br>
       <input class="button" type="submit" value="Add Task">
     </form>
   </div>
@@ -39,10 +39,16 @@ const view = (state) => `
   </div>
 </div>
 <div class="phoneView">
-  <a href="/">Back to projects</a>
+  <div class="nav">
+    <a href="/">Back to projects</a>
+    <form class="taskForm" action="/task/project/${state.project.id}/create" method="POST">
+      <input type="text" name="description" placeholder="Task Description" required> <br>
+      <input class="button" type="submit" value="Add Task">
+    </form>
+  </div>
   <h1>${state.project.name}</h1>
   <form class="taskForm"action="/task/project/${state.project.id}/create" method="POST">
-    <input type="text" id="description" name="description" placeholder="Task Description" required> <br>
+    <input type="text" name="description" placeholder="Task Description" required> <br>
     <input type="submit" value="Add Task">
   </form>
   <select name="tasks" id="tasks" onchange="app.run('showTasks', event)">
@@ -63,7 +69,7 @@ const viewTaskDesktop = (task) => {
       <div class="taskEdit">
         <select class="button" name="${task.id}" onchange="app.run('assignUser', event)">
           <option ${!task.UserId ? 'selected': ''}>Assign User</option>
-        ${state.users.map(user=>{
+          ${state.users.map(user=>{
           return `
           <option value="${user.id}" ${task.UserId==user.id ? 'selected': ''}>${user.name}</option>
           `
@@ -77,11 +83,105 @@ const viewTaskDesktop = (task) => {
 `
 }
 
+const viewTaskPhone = (task) => {
+  if (task.status===0) {
+    return `
+      <div id="toDoPhone" class="task">
+        <div class="taskEdit">
+          <select class="button" name="${task.id}" onchange="app.run('assignUser', event)">
+            <option ${!task.UserId ? 'selected': ''}>Assign User</option>
+            ${state.users.map(user=>{
+            return `
+            <option value="${user.id}" ${task.UserId==user.id ? 'selected': ''}>${user.name}</option>
+            `
+            })}
+          </select> 
+          <a id=${task.id} href="javascript:;" onclick="app.run('markInProgress', event)">Mark in Progress</a>
+          <a href="/task/${task.id}/destroy" method="POST">&#10060</a>
+        </div> 
+        <p>${task.description}</p>
+        ${showAvatar(task.UserId)}
+      </div>
+    `
+  } else if (task.status===1) {
+    return `
+    <div id="doingPhone" class="task">
+      <div class="taskEdit">
+        <select class="button" name="${task.id}" onchange="app.run('assignUser', event)">
+          <option ${!task.UserId ? 'selected': ''}>Assign User</option>
+          ${state.users.map(user=>{
+          return `
+          <option value="${user.id}" ${task.UserId==user.id ? 'selected': ''}>${user.name}</option>
+          `
+          })}
+        </select> 
+        <a id=${task.id} href="javascript:;" onclick="app.run('markDone', event)">Mark Done</a>
+        <a href="/task/${task.id}/destroy" method="POST">&#10060</a>
+      </div> 
+      <p>${task.description}</p>
+      ${showAvatar(task.UserId)}
+    </div>
+  `
+  } else {
+    return `
+    <div id="donePhone" class="task">
+      <div class="taskEdit">
+        <select class="button" name="${task.id}" onchange="app.run('assignUser', event)">
+          <option ${!task.UserId ? 'selected': ''}>Assign User</option>
+            ${state.users.map(user=>{
+            return `
+            <option value="${user.id}" ${task.UserId==user.id ? 'selected': ''}>${user.name}</option>
+            `
+            })}
+          </select> 
+          <a href="/task/${task.id}/destroy" method="POST">&#10060</a>
+      </div> 
+      <p>${task.description}</p>
+      ${showAvatar(task.UserId)}
+    </div>
+  `
+  } 
+}
+
+const viewTaskDiv = (state) => {
+  if (state.taskType=="to-do"){  
+    return `
+    <div class="toDoTasksPhone">
+      <h3>To-Do</h3>
+      ${state.tasks
+        .filter((task) => task.status === 0)
+        .map(viewTaskPhone)
+        .join("")
+      }
+    </div>`
+  } else if (state.taskType=="doing"){
+    return `
+    <div class="doingTasks">
+      <h3>Doing</h3>
+      ${state.tasks
+        .filter((task) => task.status === 1)
+        .map(viewTaskPhone)
+        .join("")
+      }
+    </div>`
+  } else {
+    return `
+    <div class="doingTasks">
+      <h3>Done</h3>
+      ${state.tasks
+        .filter((task) => task.status === 2)
+        .map(viewTaskPhone)
+        .join("")
+      }
+    </div>`
+  }
+}
+
 const showAvatar = userId => {
   if (userId){
     const user = state.users.find(user => user.id === Number(userId))
     return `
-      <div id='userIMG'>
+      <div class='userIMG'>
         <img src="${user.avatar}" />
       </div>
     `  
@@ -126,6 +226,38 @@ const update = {
     });
     return state;
   },
+  showTasks: (state, event) => {
+    event.preventDefault();
+    let taskType = event.target.value
+    state.taskType = taskType
+    return state
+  },
+  markInProgress: async (state, event) => {
+    let id = event.target.id
+    let task = state.tasks.find((task) => task.id == Number(id))
+    task.status = 1
+    await fetch(`/task/${id}/update`, {
+      method: "POST",
+      headers: {
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify({ status: task.status }),
+    })
+    return state
+  },
+  markDone: async (state, event) => {
+    let id = event.target.id
+    let task = state.tasks.find((task) => task.id == Number(id))
+    task.status = 2
+    await fetch(`/task/${id}/update`, {
+      method: "POST",
+      headers: {
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify({ status: task.status }),
+    })
+    return state
+  }
 }
 
 app.start("projects", state, view, update)
