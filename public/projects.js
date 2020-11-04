@@ -34,6 +34,9 @@ const view = (state) => `
       }
     </div>
   </div>
+  <div class="projectEdit">
+    <a href="/project/${state.project.id}/destroy">Delete Project</a>
+  </div>
 </div>
 `
 
@@ -56,9 +59,10 @@ const viewTaskDesktop = (task) => {
     </div>
 `
 }
+
 const showAvatar = userId => {
   if (userId){
-    const user = state.users.find(user => user.id === Number(userId));
+    const user = state.users.find(user => user.id === Number(userId))
     return `
       <div id='userIMG'>
         <img src="${user.avatar}" />
@@ -70,19 +74,19 @@ const showAvatar = userId => {
 
 const update = {
   onDragStart: (state, event) => {
-    event.dataTransfer.setData("text", event.target.id);
-    return state;
+    event.dataTransfer.setData("text", event.target.id)
+    return state
   },
   onDrop: async (state, event) => {
-    event.preventDefault();
-    const id = event.dataTransfer.getData("text");
-    const task = state.tasks.find((task) => task.id == Number(id));
+    event.preventDefault()
+    const id = event.dataTransfer.getData("text")
+    const task = state.tasks.find((task) => task.id == Number(id))
     if (event.target.id == 'todo') {
-        task.status = 0;
+        task.status = 0
     } else if (event.target.id == 'doing') {
-        task.status = 1;
+        task.status = 1
     } else {
-        task.status = 2;
+        task.status = 2
     }
     await fetch(`/task/${id}/update`, {
       method: "POST",
@@ -90,13 +94,12 @@ const update = {
         "Content-type": "application/json",
       },
       body: JSON.stringify({ status: task.status }),
-    });
-    return state;
+    })
+    return state
   },
   assignUser: async (state, event) =>{
-    const task = state.tasks.find(task => task.id === Number(event.target.name));
-    task.UserId = Number(event.target.value);
-    console.log(task);
+    const task = state.tasks.find(task => task.id === Number(event.target.name))
+    task.UserId = Number(event.target.value)
     await fetch(`/task/${task.id}/assign`, {
       method: "POST",
       headers: {
@@ -107,4 +110,5 @@ const update = {
     return state;
   },
 }
-app.start("projects", state, view, update);
+
+app.start("projects", state, view, update)
