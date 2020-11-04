@@ -38,6 +38,23 @@ const view = (state) => `
     <a href="/project/${state.project.id}/destroy">Delete Project</a>
   </div>
 </div>
+<div class="phoneView">
+  <a href="/">Back to projects</a>
+  <h1>${state.project.name}</h1>
+  <form class="taskForm"action="/task/project/${state.project.id}/create" method="POST">
+    <input type="text" id="description" name="description" placeholder="Task Description" required> <br>
+    <input type="submit" value="Add Task">
+  </form>
+  <select name="tasks" id="tasks" onchange="app.run('showTasks', event)">
+    <option value="to-do" ${state.taskType === "to-do" ? "selected" : ""}>To-Do</option>
+    <option value="doing" ${state.taskType === "doing" ? "selected" : ""}>Doing</option>
+    <option value="done" ${state.taskType === "done" ? "selected" : ""}>Done</option>
+  </select>
+  ${viewTaskDiv(state)}
+  <div class="projectEdit">
+    <a href="/project/${state.project.id}/destroy">Delete Project</a>
+  </div>
+</div>
 `
 
 const viewTaskDesktop = (task) => {
