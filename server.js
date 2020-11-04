@@ -11,16 +11,11 @@ const handlebars = expressHandlebars({
 })
 
 
-
 app.use(express.static('public'))
 app.engine('handlebars', handlebars)
 app.set('view engine', 'handlebars')
-
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
-
-
-
 
 
 //get all projects {id, name}, render home view
@@ -41,7 +36,11 @@ app.get('/project/:id', async (req, res) => {
     res.render('project', {tasks: JSON.stringify(tasks), users: JSON.stringify(users), project: JSON.stringify(project)});
 })
 
-
+//create user, redirect back
+app.post('/user/create', async (req, res) => {
+    await User.create(req.body)
+    res.redirect('back')
+})
 
 //get user from taskid, return user
 app.get('/task/:taskid/user', async (req, res) => {
@@ -50,17 +49,7 @@ app.get('/task/:taskid/user', async (req, res) => {
     return user
 })
 
-
-
-
-
-//create user, redirect back
-app.post('/user/create', async (req, res) => {
-    await User.create(req.body)
-    res.redirect('back')
-})
-
-// find from id and update user, redirect back
+// find from id and update user, redirect back, currently unused
 app.post('/user/:userid/update', async (req, res) => {
     const user = await User.findByPk(req.params.userid,{ logging: false })
     await user.update(req.body)
@@ -72,8 +61,6 @@ app.post('/user/:userid/destroy', async (req, res) => {
     const user = await User.findByPk(req.params.userid)
     await user.destroy()
 })
-
-
 
 //create project, redirect back
 app.post('/project/create', async (req, res) => {
@@ -89,15 +76,11 @@ app.post('/project/:projectid/update', async (req, res) => {
 })
 
 //find from id and destroy project, redirect to home
-app.post('/project/:projectid/destroy', async (req, res) => {
+app.get('/project/:projectid/destroy', async (req, res) => {
     const project = await Project.findByPk(req.params.projectid)
     await project.destroy()
     res.redirect('/')
 })
-
-
-
-
 
 //create task, find project from id and assign, redirect back
 app.post('/task/project/:projectid/create', async (req, res) => {
