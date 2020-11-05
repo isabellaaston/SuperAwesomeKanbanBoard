@@ -302,6 +302,7 @@ a:link{
     border-radius: 5px;
     margin: 1rem auto;
     height: auto;
+    min-height: 20vh;
     padding: 0.5rem 0;
 }
 
@@ -312,6 +313,7 @@ a:link{
     border-radius: 5px;
     margin: 1rem auto;
     height: auto;
+    min-height: 20vh;
     padding: 0.5rem 0;
 }
 
