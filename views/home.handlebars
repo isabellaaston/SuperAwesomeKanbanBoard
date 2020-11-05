@@ -35,7 +35,7 @@
         <form class="userFormPhone" action="/user/create" method="POST">
             <input type="text" id="name" name="name" placeholder="Name" required> <br>
             <input type="url" id="avatar" name="avatar" placeholder="Avatar Url" required> <br>
-            <input type="submit" value="Add User">
+            <input class="button" type="submit" value="Add User">
         </form>
     <section class="gallery">
         {{#each projects}}
@@ -50,11 +50,12 @@
             <form class="addProject" action="/project/create" method="POST">
                 <input type="text" id="name" name="name" placeholder="Project Name" required> <br>
                 <input type="url" id="image" name="image" placeholder="Image Url" required> <br>
-                <input type="submit" value="Add Project">
+                <input class="button" type="submit" value="Add Project">
             </form>
         </div>
     </section>
 </div>
+<script src="/socket.io/socket.io.js"></script>
 <script>
-
+  var socket = io();
 </script>
