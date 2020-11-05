@@ -30,11 +30,9 @@
     </section>
 </div>
 
-<div class= "phoneView hidden">
+<div class= "phoneView">
     <h1>Projects</h1>
-    <a href="javascript:;" onclick="showUserForm()">Add User</a>
-    <a href="javascript:;" onclick="hideUserForm()"></a>
-        <form class="userFormPhone hidden" action="/user/create" method="POST">
+        <form class="userFormPhone" action="/user/create" method="POST">
             <input type="text" id="name" name="name" placeholder="Name" required> <br>
             <input type="url" id="avatar" name="avatar" placeholder="Avatar Url" required> <br>
             <input type="submit" value="Add User">
@@ -58,12 +56,5 @@
     </section>
 </div>
 <script>
-    function showUserForm(){
-        let element = document.querySelector(".userFormPhone")
-        element.classList.remove("hidden")
-    }
-    function hideUserForm(){
-        let element = document.querySelector(".userFormPhone")
-        element.classList.add("hidden")
-    }
+
 </script>

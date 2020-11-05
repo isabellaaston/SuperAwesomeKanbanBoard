@@ -1,5 +1,5 @@
 const view = (state) => `
-<div class="desktopView hidden">
+<div class="desktopView">
   <div class="nav">
     <a href="/">Back to projects</a>
     <form class="taskForm" action="/task/project/${state.project.id}/create" method="POST">
@@ -40,21 +40,18 @@ const view = (state) => `
 </div>
 <div class="phoneView">
   <div class="nav">
-    <a href="/">Back to projects</a>
-    <form class="taskForm" action="/task/project/${state.project.id}/create" method="POST">
-      <input type="text" name="description" placeholder="Task Description" required> <br>
-      <input class="button" type="submit" value="Add Task">
-    </form>
+    <a href="/">Back</a>
   </div>
   <h1>${state.project.name}</h1>
   <form class="taskForm"action="/task/project/${state.project.id}/create" method="POST">
     <input type="text" name="description" placeholder="Task Description" required> <br>
-    <input type="submit" value="Add Task">
+    <input class="button" type="submit" value="Add Task">
   </form>
-  <select name="tasks" id="tasks" onchange="app.run('showTasks', event)">
+  <select class= "button" name="tasks" id="tasks" onchange="app.run('showTasks', event)">
     <option value="to-do" ${state.taskType === "to-do" ? "selected" : ""}>To-Do</option>
     <option value="doing" ${state.taskType === "doing" ? "selected" : ""}>Doing</option>
     <option value="done" ${state.taskType === "done" ? "selected" : ""}>Done</option>
+    <option value="all" ${state.taskType === "all" ? "selected" : ""}>All</option>
   </select>
   ${viewTaskDiv(state)}
   <div class="projectEdit">
@@ -156,7 +153,7 @@ const viewTaskDiv = (state) => {
     </div>`
   } else if (state.taskType=="doing"){
     return `
-    <div class="doingTasks">
+    <div class="doingTasksPhone">
       <h3>Doing</h3>
       ${state.tasks
         .filter((task) => task.status === 1)
@@ -164,9 +161,35 @@ const viewTaskDiv = (state) => {
         .join("")
       }
     </div>`
+  } else if(state.taskType=="done") {
+    return `
+    <div class="doneTasksPhone">
+      <h3>Done</h3>
+      ${state.tasks
+        .filter((task) => task.status === 2)
+        .map(viewTaskPhone)
+        .join("")
+      }
+    </div>`
   } else {
     return `
-    <div class="doingTasks">
+    <div class="toDoTasksPhone">
+    <h3>To-Do</h3>
+    ${state.tasks
+      .filter((task) => task.status === 0)
+      .map(viewTaskPhone)
+      .join("")
+    }
+    </div>
+    <div class="doingTasksPhone">
+    <h3>Doing</h3>
+    ${state.tasks
+      .filter((task) => task.status === 1)
+      .map(viewTaskPhone)
+      .join("")
+    }
+    </div>
+    <div class="doneTasksPhone">
       <h3>Done</h3>
       ${state.tasks
         .filter((task) => task.status === 2)
