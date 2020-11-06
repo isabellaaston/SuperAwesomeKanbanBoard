@@ -1,0 +1,24 @@
+<div class="userPage">
+    <div class="topBar">
+        <h2>Super Awesome Kanban Board</h2>
+    </div>
+    <div class="nav">
+        <a class="goHome" href="/users">Back to Users</a>
+    </div>
+    <div class="userDetails">
+        <div class="IMG"><img src="{{user.avatar}}" /></div>
+        <h2>{{user.name}}</h4>
+        <form class="userEditForm" action="/user/{{user.id}}/update" method="POST">
+            <input type="text" name="name" value="{{user.name}}" required> <br>
+            <input type="url" name="image" value="{{user.avatar}}" required> <br>
+            <input class="button" type="submit" value="Update User">
+        </form>
+    </div>
+    <div class="assignedTasks">
+        <ul>
+        {{#each tasks}}
+            <li class="assignedTask"><a href="/project/{{this.ProjectId}}"><h4>{{this.description}}</h4></a></li>
+        {{/each}}
+        </ul>
+    </div>
+</div>

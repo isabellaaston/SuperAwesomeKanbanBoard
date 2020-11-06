@@ -1,5 +1,8 @@
 const view = (state) => `
 <div class="desktopView">
+  <div class="topBar">
+    <h2>Super Awesome Kanban Board</h2>
+  </div>
   <div class="nav">
     <a href="/">Back to projects</a>
     <form class="taskForm" action="/task/project/${state.project.id}/create" method="POST">
