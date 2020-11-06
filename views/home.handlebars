@@ -2,13 +2,9 @@
     <div class="topBar">
         <h2>Super Awesome Kanban Board</h2>
     </div>
-    <div class="userFormBar">
-        <form class="userForm"action="/user/create" method="POST">
-            <input type="text" id="name" name="name" placeholder="Name" required> <br>
-            <input type="url" id="avatar" name="avatar" placeholder="Avatar Url" required> <br>
-            <input class="button" type="submit" value="Add User">
-        </form>
-    </div>
+    <nav class="goHome">    
+        <a href="/users">See Users</a>
+    </nav>
     <section class="gallery">
         {{#each projects}}
             <a href="./project/{{this.id}}">

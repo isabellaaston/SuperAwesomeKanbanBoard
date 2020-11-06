@@ -18,6 +18,7 @@ form {
     padding: 1vh;
     display: flex;
     justify-content: space-between;
+    margin: 0 1rem;
 }
 
 .projectEdit {
@@ -42,6 +43,17 @@ form {
     border-radius: 5px;
     text-decoration: none;
     text-align: center;
+}
+
+.goHome a {
+    margin: 1rem;
+    background-color: #0E192F;
+    color: #E7EAEF;
+    border: none;
+    padding: 0.5rem;
+    border-radius: 5px;
+    text-decoration: none;
+    text-align: center; 
 }
 
 .phoneView .nav a {
@@ -143,6 +155,56 @@ img {
     margin-top: 1rem;
 }
 
+.users {
+    height: 29vw;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    margin-top: 1rem;
+}
+
+.userInUsers {
+    border-radius: 30px;
+    height: 8vw;
+    background-repeat: no-repeat;
+    background-size: cover;
+    border: #0E192F solid 2px;
+    width: 80%;
+}
+.userEdit {
+    text-align: center;
+}
+
+.userEdit a {
+    text-decoration: none;
+}
+
+.userInUsers .cross {
+    display: flex;
+    justify-content: flex-end;
+    margin: 0.2rem 0.5rem 0 0;
+}
+
+.userInUsers img {
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    margin: 0.5rem;
+}
+
+.IMG img {
+    margin: auto;
+    height: 10rem;
+    width: 10rem;
+}
+
+.userPage {
+    text-align: center;
+}
+
+.nav img {
+    margin: auto;
+}
+
 .userFormBar{
     padding: 1vh;
     display: flex;
@@ -153,13 +215,44 @@ img {
     display: flex;
     direction: ltr;
     gap: .5vh;
-    width: 80%;
 }
 
 .userForm * {
     border-radius: .5rem;
     font-size: 100%;
     border: #0E192F solid 1px;
+}
+
+
+.userEditForm {
+    display: flex;
+    direction: ltr;
+    gap: .5vh;
+}
+
+.userEditForm * {
+    border-radius: .5rem;
+    font-size: 100%;
+    border: #0E192F solid 1px;
+}
+
+.userDetails .userEditForm {
+    display: flex;
+    justify-content: center;
+}
+
+.assignedTasks {
+    display:flex;
+    justify-content: center;
+    
+}
+
+.assignedTask {
+    border: #0E192F solid 1px;
+    border-radius: .5rem;
+    height: auto;
+    padding: 0.5rem;
+    list-style: none;
 }
 
 .userFormPhone {

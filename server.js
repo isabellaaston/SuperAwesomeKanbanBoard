@@ -15,7 +15,7 @@ app.set('view engine', 'handlebars')
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
 
-
+//PROJECTS
 //get all projects {id, name}, render home view
 app.get('/', async (req, res) => {
     const projects = await Project.findAll({ logging: false })
@@ -32,32 +32,6 @@ app.get('/project/:id', async (req, res) => {
     const users = await User.findAll({ logging: false })
     const tasks = await Task.findAll({ where : {ProjectId : req.params.id }});
     res.render('project', {tasks: JSON.stringify(tasks), users: JSON.stringify(users), project: JSON.stringify(project)});
-})
-
-//create user, redirect back
-app.post('/user/create', async (req, res) => {
-    await User.create(req.body)
-    res.redirect('back')
-})
-
-//get user from taskid, return user
-app.get('/task/:taskid/user', async (req, res) => {
-    const task = await Task.findByPk(req.params.taskid)
-    const user = await User.findByPk(task.UserId)
-    return user
-})
-
-// find from id and update user, redirect back, currently unused
-app.post('/user/:userid/update', async (req, res) => {
-    const user = await User.findByPk(req.params.userid,{ logging: false })
-    await user.update(req.body)
-    res.redirect('back')
-})
-
-// find from id and destroy user, currently unused
-app.post('/user/:userid/destroy', async (req, res) => {
-    const user = await User.findByPk(req.params.userid)
-    await user.destroy()
 })
 
 //create project, redirect back
@@ -80,6 +54,49 @@ app.get('/project/:projectid/destroy', async (req, res) => {
     res.redirect('/')
 })
 
+
+//USERS
+//create user, redirect back
+app.get('/users', async(req, res) => {
+    const users = await User.findAll({ logging: false })
+    res.render('users', {users})
+})
+
+app.post('/user/create', async (req, res) => {
+    await User.create(req.body)
+    res.redirect('back')
+})
+
+//get user from taskid, return user
+app.get('/task/:taskid/user', async (req, res) => {
+    const task = await Task.findByPk(req.params.taskid)
+    const user = await User.findByPk(task.UserId)
+    return user
+})
+
+
+app.get('/users/:userid', async (req, res) => {
+    const user = await User.findByPk(req.params.userid,{ logging: false })
+    const tasks = await Task.findAll({ where : {UserId : req.params.userid}})
+    res.render('user', {user, tasks})
+})
+
+// find from id and update user, redirect back, currently unused
+app.post('/user/:userid/update', async (req, res) => {
+    const user = await User.findByPk(req.params.userid,{ logging: false })
+    await user.update(req.body)
+    res.redirect('back')
+})
+
+// find from id and destroy user, currently unused
+app.get('/users/:userid/destroy', async (req, res) => {
+    const user = await User.findByPk(req.params.userid)
+    await user.destroy()
+    res.redirect('back')
+})
+
+
+//TASKS
 //create task, find project from id and assign, redirect back
 app.post('/task/project/:projectid/create', async (req, res) => {
     const task = await Task.create(req.body)

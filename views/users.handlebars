@@ -1,0 +1,31 @@
+<div class="usersDesktopView">
+    <div class="topBar">
+        <h2>Super Awesome Kanban Board</h2>
+    </div>
+    <div class="nav">
+        <a href="/">Back to projects</a>
+        <div class="userFormBar">
+            <form class="userForm"action="/user/create" method="POST">
+                <input type="text" id="name" name="name" placeholder="Name" required> <br>
+                <input type="url" id="avatar" name="avatar" placeholder="Avatar Url" required> <br>
+                <input class="button" type="submit" value="Add User">
+            </form>
+        </div>
+    </div>
+    <section class="users">
+        {{#each users}}
+        <div class="userInUsers">
+                <a class="cross" href="/users/{{this.id}}/destroy" method="POST">&#10060</a>
+                    <div class="userEdit">
+                        <a href="./users/{{this.id}}">
+                            <div class='userIMG'>
+                                <img src="{{this.avatar}}" />
+                            </div>
+                            <p>{{this.name}}</p>
+                        </a>
+                </div>
+            </a> 
+        </div>
+        {{/each}}
+    </section>
+</div>
